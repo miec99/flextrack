@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FlexTrack</title>
+<meta property="og:title" content="FlexTrack">
+<meta property="og:description" content="Find the weak spot before it finds you. A student-led sports medicine project mapping where injury risk builds on an athlete's body.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://getflextrack.com/">
+<meta name="theme-color" content="#0F1B2D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 22'%3E%3Cpath d='M2 2 L15 12 L28 2 L28 9 L15 20 L2 9Z' fill='%23E2621B'/%3E%3C/svg%3E">
+<meta name="description" content="FlexTrack maps where on an athlete's body injury risk is building. A student-led sports medicine project by Laila Zaghloul.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: training-log instrument page. Narrow reading column for story, full-width instrument panel for the prototype, ruled bands between sections. */
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --ink:#0F1B2D; --muted:#566275; --line:#D5DCE5;
+  --accent:#E2621B; --accent-ink:#A9480F; --band:#0F1B2D; --band-ink:#EEF2F7; --band-muted:#9EABBE;
+  --clear:#2E8B74; --watch:#C98A0E; --check:#D2452B; --bodyfill:#DCE2EA; --bodyline:#B9C3D0;
+  --f-display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --f-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --wrap:1120px; --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0B1424; --surface:#121F36; --ink:#E7ECF3; --muted:#97A4B8; --line:#25354F;
+  --accent:#F07A35; --accent-ink:#F59A62; --band:#060D19; --band-ink:#E7ECF3; --band-muted:#8E9BB0;
+  --clear:#3FB394; --watch:#E2AC33; --check:#F0644A; --bodyfill:#24344F; --bodyline:#34476A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1424; --surface:#121F36; --ink:#E7ECF3; --muted:#97A4B8; --line:#25354F;
+  --accent:#F07A35; --accent-ink:#F59A62; --band:#060D19; --band-ink:#E7ECF3; --band-muted:#8E9BB0;
+  --clear:#3FB394; --watch:#E2AC33; --check:#F0644A; --bodyfill:#24344F; --bodyline:#34476A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+a{color:var(--accent-ink);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:800;line-height:.95;letter-spacing:.005em;text-wrap:balance;margin:0;text-transform:uppercase}
+h2{font-size:clamp(2.3rem,5.4vw,3.6rem)}
+h3{font-size:1.45rem;font-weight:800}
+p{margin:0}
+.eyebrow{font-family:var(--f-mono);font-size:.76rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-ink);font-weight:500}
+.lede{font-size:1.15rem;color:var(--muted);max-width:62ch}
+.prose{max-width:66ch;display:grid;gap:14px}
+section{padding-block:72px;border-top:1px solid var(--line)}
+.sec-head{display:grid;gap:14px;margin-bottom:34px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.chev{display:inline-block;width:.9em;height:.62em;vertical-align:.08em}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:900;font-size:1.6rem;letter-spacing:.02em;text-transform:uppercase;color:var(--ink);text-decoration:none}
+.brand svg{width:30px;height:22px}
+.nav ul{list-style:none;display:flex;gap:18px;margin:0;padding:0;flex-wrap:wrap}
+.nav a.l{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500}
+.nav a.l:hover{color:var(--ink)}
+
+/* hero */
+.hero{padding-block:40px 64px;border-top:none}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:48px;align-items:end}
+.hero h1{font-size:clamp(3.2rem,9.6vw,7.4rem);font-weight:900;line-height:.86}
+.hero h1 .hl{color:var(--accent)}
+.hero .lede{margin-top:22px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 .95rem var(--f-body);padding:12px 18px;border-radius:999px;border:1.5px solid var(--ink);background:var(--ink);color:var(--bg);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:hover{filter:brightness(1.12)}
+.facts{display:grid;gap:0;border-top:2px solid var(--ink)}
+.fact{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:baseline;padding-block:16px;border-bottom:1px solid var(--line)}
+.fact b{font-family:var(--f-display);font-weight:900;font-size:2.6rem;line-height:1;color:var(--ink);min-width:3.6ch}
+.fact span{color:var(--muted);font-size:.93rem}
+.fact sup{font-family:var(--f-mono);font-size:.7rem;color:var(--accent-ink)}
+.origin-note{margin-top:14px;font-size:.84rem;color:var(--muted)}
+
+/* problem */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+.stat-col{display:grid;gap:22px;align-content:start}
+.stat{border-left:3px solid var(--accent);padding-left:16px}
+.stat b{display:block;font-family:var(--f-display);font-weight:900;font-size:2.4rem;line-height:1}
+.stat span{color:var(--muted);font-size:.95rem}
+
+/* prototype band */
+.band{background:var(--band);color:var(--band-ink);border-top:none}
+.band .eyebrow{color:var(--accent)}
+.band .lede{color:var(--band-muted)}
+.panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:28px;align-items:start}
+.instr{background:var(--surface);color:var(--ink);border-radius:var(--radius);padding:22px;border:1px solid var(--line)}
+.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 18px;margin-bottom:22px}
+.field{display:grid;gap:6px;min-width:0}
+.field label,.lbl{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.field .val{font-family:var(--f-mono);font-size:.95rem;font-weight:500}
+input[type=number],select,input[type=text],input[type=email],textarea{font:500 .95rem var(--f-body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px;width:100%}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.load-strip{display:flex;flex-wrap:wrap;gap:8px 18px;padding:12px 14px;border-radius:8px;background:var(--bg);font-size:.88rem;margin-bottom:6px}
+.load-strip .mono b{font-weight:500}
+.flagnote{font-size:.8rem;color:var(--muted);margin-top:6px}
+.bodywrap{position:sticky;top:16px;background:var(--surface);border-radius:var(--radius);padding:16px 12px 10px;border:1px solid var(--line)}
+.bodywrap svg{width:100%;height:auto;display:block;max-width:440px;margin:0 auto}
+.rg{cursor:pointer;transition:fill .25s, fill-opacity .25s}
+.rg:hover{filter:brightness(1.08)}
+.rg.sel{stroke:var(--ink);stroke-width:2.5}
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);padding-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.region-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.pill{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;font-weight:500;color:#fff;white-space:nowrap}
+.pill.clear{background:var(--clear)} .pill.watch{background:var(--watch)} .pill.check{background:var(--check)}
+.mult{font-family:var(--f-display);font-weight:900;font-size:3rem;line-height:1;margin-top:10px}
+.mult small{font-family:var(--f-body);font-weight:500;font-size:.85rem;color:var(--muted);text-transform:none;margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{font-family:var(--f-mono);font-size:.74rem;padding:4px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.advice{border-top:1px solid var(--line);padding-top:12px;margin-top:4px;font-size:.95rem;display:grid;gap:8px}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{flex:1;font:500 .82rem var(--f-body);padding:8px 6px;border:0;background:transparent;color:var(--ink);cursor:pointer;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.reg-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:14px;margin-top:14px}
+.ranked{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:2px}
+.ranked button{width:100%;display:grid;grid-template-columns:minmax(0,9.5em) 1fr auto;gap:12px;align-items:center;background:transparent;border:0;border-radius:6px;padding:7px 8px;cursor:pointer;color:var(--ink);font:500 .88rem var(--f-body);text-align:left}
+.ranked button:hover,.ranked button.sel{background:var(--bg)}
+.bar{height:8px;border-radius:4px;background:var(--bg);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px}
+.ranked .mono{font-size:.8rem;color:var(--muted);min-width:4.2ch;text-align:right}
+.proto-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.proto-actions button{font:600 .85rem var(--f-body);padding:9px 14px;border-radius:999px;border:1px solid var(--band-muted);background:transparent;color:var(--band-ink);cursor:pointer}
+.disclaim{margin-top:22px;font-size:.84rem;color:var(--band-muted);max-width:80ch}
+.sample-tag{display:inline-block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;border:1px dashed var(--accent);color:var(--accent);padding:3px 8px;border-radius:4px}
+
+/* tables */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:13px 16px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+th{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;background:var(--bg)}
+td b{font-weight:600}
+.tag{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 7px;border-radius:4px;white-space:nowrap;border:1px solid currentColor}
+.tag.strong{color:var(--clear)} .tag.mod{color:var(--watch)} .tag.cont{color:var(--check)} .tag.assume{color:var(--muted)}
+.us td{background:color-mix(in srgb,var(--accent) 8%,transparent)}
+
+/* patch */
+.patch-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:40px;align-items:center}
+.patch-art{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.patch-art svg{width:100%;height:auto;display:block}
+.sensors{display:grid;gap:0;border-top:2px solid var(--ink)}
+.sensor{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;padding-block:14px;border-bottom:1px solid var(--line)}
+.sensor h4{margin:0;font-size:1rem;font-weight:600}
+.sensor p{grid-column:1/-1;color:var(--muted);font-size:.92rem}
+
+/* roadmap */
+.road{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-top:2px solid var(--ink)}
+.step{padding:18px 18px 18px 0;border-right:1px solid var(--line);display:grid;gap:8px;align-content:start}
+.step+.step{padding-left:18px}
+.step:last-child{border-right:0}
+.step .when{font-family:var(--f-mono);font-size:.78rem;color:var(--muted)}
+.step p{font-size:.92rem;color:var(--muted)}
+.status{justify-self:start;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px}
+.status.live{background:var(--clear);color:#fff}
+.status.rec{background:var(--accent);color:#fff}
+.status.plan{border:1px solid var(--line);color:var(--muted)}
+
+/* pilot */
+.pilot-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.list{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.list li{display:grid;grid-template-columns:18px 1fr;gap:10px;font-size:.96rem}
+.list li::before{content:"";width:12px;height:8px;margin-top:8px;background:var(--accent);clip-path:polygon(0 0,50% 60%,100% 0,100% 40%,50% 100%,0 40%)}
+.form{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px;display:grid;gap:14px}
+.form .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form textarea{min-height:170px;font-family:var(--f-mono);font-size:.82rem;line-height:1.5}
+.form .note{font-size:.84rem;color:var(--muted)}
+.log{display:grid;gap:0;border-top:1px solid var(--line);margin-top:20px}
+.log div{display:grid;grid-template-columns:8.5em 1fr;gap:14px;padding-block:12px;border-bottom:1px solid var(--line);font-size:.93rem}
+.log .mono{color:var(--muted);font-size:.8rem}
+
+/* impact */
+.quotes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+.quote{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;display:grid;gap:18px;align-content:space-between;position:relative}
+.quote::before{content:"\201C";font-family:var(--f-display);font-weight:900;font-size:5rem;line-height:.6;color:var(--accent);height:.5em}
+.quote p.q{font-size:1.12rem;line-height:1.55}
+.quote .who{display:grid;gap:2px;border-top:1px solid var(--line);padding-top:14px}
+.quote .who b{font-weight:600}
+.quote .who span{color:var(--muted);font-size:.9rem}
+.quote .where{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-ink)}
+.draft{position:absolute;top:14px;right:14px;font-family:var(--f-mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;border:1px dashed var(--muted);color:var(--muted);padding:2px 7px;border-radius:4px}
+.contact{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin-top:22px;padding:14px 16px;border-radius:8px;background:var(--surface);border:1px solid var(--line)}
+.contact .mono{font-size:.95rem;user-select:all}
+.contact button{font:600 .82rem var(--f-body);padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+@media (max-width:900px){.quotes{grid-template-columns:minmax(0,1fr)}}
+
+/* founder */
+.founder{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px}
+.founder blockquote{margin:0;font-size:1.18rem;line-height:1.55;border-left:3px solid var(--accent);padding-left:18px}
+.cv{display:grid;gap:0;border-top:2px solid var(--ink)}
+.cv div{display:grid;grid-template-columns:9em 1fr;gap:14px;padding-block:11px;border-bottom:1px solid var(--line);font-size:.93rem}
+.cv span:first-child{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+
+/* sources + footer */
+.sources{columns:2;column-gap:40px;font-size:.86rem;color:var(--muted);padding-left:1.4em;margin:0}
+.sources li{break-inside:avoid;margin-bottom:10px}
+footer{border-top:1px solid var(--line);padding-block:32px 48px;font-size:.84rem;color:var(--muted)}
+footer .wrap{display:grid;gap:10px}
+
+@media (max-width:900px){
+  .bodywrap{position:static}
+  .hero-grid,.split,.panel,.patch-grid,.pilot-grid,.founder{grid-template-columns:minmax(0,1fr)}
+  .road{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .step:nth-child(2){border-right:0}
+  .step:nth-child(3){padding-left:0}
+  .step:nth-child(n+3){border-top:1px solid var(--line)}
+  .sources{columns:1}
+}
+@media (max-width:560px){
+  section{padding-block:54px}
+  .road{grid-template-columns:minmax(0,1fr)}
+  .step,.step+.step{padding:16px 0;border-right:0;border-top:1px solid var(--line)}
+  .step:first-child{border-top:0}
+  .form .row,.reg-controls{grid-template-columns:minmax(0,1fr)}
+  .log div,.cv div{grid-template-columns:minmax(0,1fr);gap:2px}
+  .ranked button{grid-template-columns:minmax(0,8em) 1fr auto}
+  .nav ul{gap:12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+</head>
+<body>
+<header class="wrap nav">
+  <a class="brand" href="#top" aria-label="FlexTrack home">
+    <svg viewBox="0 0 30 22" aria-hidden="true"><path d="M2 2 L15 12 L28 2 L28 9 L15 20 L2 9Z" fill="var(--accent)"/></svg>FlexTrack
+  </a>
+  <nav aria-label="Sections"><ul>
+    <li><a class="l" href="#problem">Problem</a></li>
+    <li><a class="l" href="#prototype">Prototype</a></li>
+    <li><a class="l" href="#patch">Patch</a></li>
+    <li><a class="l" href="#evidence">Evidence</a></li>
+    <li><a class="l" href="#impact">Impact</a></li>
+    <li><a class="l" href="#pilot">Pilot</a></li>
+    <li><a class="l" href="#founder">Founder</a></li>
+  </ul></nav>
+</header>
+
+<main id="top">
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Sports medicine project · Dubai · 2025 to now</p>
+      <h1 style="margin-top:16px">Find the <span class="hl">weak spot</span> before it finds you.</h1>
+      <p class="lede">FlexTrack shows athletes and coaches where on the body injury risk is building, using the signals sports medicine already trusts: past injuries, training load, sleep and soreness. The check-in prototype works today. The smart patch is next.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#prototype">Try the prototype</a>
+        <a class="btn ghost" href="#pilot">Join the pilot</a>
+      </div>
+    </div>
+    <div>
+      <div class="facts">
+        <div class="fact"><b>55%</b><span>of time-loss injuries in elite men's football are muscle injuries <sup>[1]</sup></span></div>
+        <div class="fact"><b>2.7×</b><span>higher risk of a hamstring strain for athletes with any previous hamstring strain <sup>[3]</sup></span></div>
+        <div class="fact"><b>1.7×</b><span>more likely to be injured: adolescent athletes sleeping under 8 hours a night <sup>[4]</sup></span></div>
+      </div>
+      <p class="origin-note">Started as a response to the Barça Innovation Hub brief in the Hult Future Leaders Challenge 2025.</p>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap split">
+    <div class="sec-head" style="margin:0">
+      <p class="eyebrow">The problem</p>
+      <h2>Injuries rarely come from nowhere</h2>
+      <div class="prose" style="margin-top:8px">
+        <p>Most muscle injuries are non-contact. They build up out of things a team can see coming: a player returning from an old strain, a week where training suddenly doubles, a run of short nights, a calf that has been tight for days.</p>
+        <p>Elite clubs pay sports scientists to watch for these patterns. School, academy and club athletes usually have no one doing it. The warning signs are there, but they are scattered across a coach's memory, a physio's notes and an athlete's own body.</p>
+        <p>FlexTrack puts those signals in one place and maps them onto the body, so the question changes from "is this athlete tired?" to "which part of this athlete needs attention today?"</p>
+      </div>
+    </div>
+    <div class="stat-col">
+      <div class="stat"><b class="mono" style="font-family:var(--f-display)">€732m</b><span>estimated cost of 4,123 injuries across Europe's top five men's leagues in the 2023/24 season <sup class="mono">[2]</sup></span></div>
+      <div class="stat"><b style="font-family:var(--f-display)">24%</b><span>of all injuries in men's professional football were hamstring injuries by 2021/22, up from 12% two decades earlier <sup class="mono">[1]</sup></span></div>
+      <div class="stat"><b style="font-family:var(--f-display)">€123m</b><span>estimated injury cost to FC Barcelona alone over five seasons to 2024/25 <sup class="mono">[2]</sup></span></div>
+      <div class="stat"><b style="font-family:var(--f-display)">4.8×</b><span>hamstring strain risk when the previous strain was recent <sup class="mono">[3]</sup></span></div>
+    </div>
+  </div>
+</section>
+
+<section id="prototype" class="band">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Prototype v1 · Check-in</p>
+      <h2>See it work</h2>
+      <p class="lede">This is the FlexTrack check-in running live. It opens on a <span class="sample-tag">Sample athlete</span> a basketball player in a heavy week who strained a hamstring last month. Change anything and the body map updates. Tap a body part to see why it is flagged and what to do.</p>
+    </div>
+
+    <div class="instr" style="margin-bottom:22px">
+      <div class="inputs">
+        <div class="field"><label for="sport">Sport</label>
+          <select id="sport">
+            <option value="basketball">Basketball</option><option value="volleyball">Volleyball</option>
+            <option value="football">Football</option><option value="gymnastics">Gymnastics</option><option value="dance">Dance</option>
+          </select></div>
+        <div class="field"><label for="weekMin">Minutes trained this week</label><input id="weekMin" type="number" min="0" max="2000" step="10"></div>
+        <div class="field"><label for="weekRpe">Average effort this week <span class="val mono" id="weekRpeV"></span></label><input id="weekRpe" type="range" min="1" max="10" step="1"></div>
+        <div class="field"><label for="usualMin">Usual weekly minutes</label><input id="usualMin" type="number" min="0" max="2000" step="10"></div>
+        <div class="field"><label for="usualRpe">Usual effort <span class="val mono" id="usualRpeV"></span></label><input id="usualRpe" type="range" min="1" max="10" step="1"></div>
+        <div class="field"><label for="sleep">Average sleep <span class="val mono" id="sleepV"></span></label><input id="sleep" type="range" min="4" max="11" step="0.5"></div>
+      </div>
+      <div class="load-strip" id="loadStrip" aria-live="polite"></div>
+      <p class="flagnote">Effort uses the 0 to 10 session-RPE scale. Load = minutes × effort, in arbitrary units (AU). "Usual" means your average week over the last four.</p>
+    </div>
+
+    <div class="panel">
+      <div class="bodywrap">
+        <svg id="bodySvg" viewBox="0 0 420 430" role="group" aria-label="Body map, front and back"></svg>
+        <div class="legend"><span><i style="background:var(--clear);opacity:.45"></i>Clear</span><span><i style="background:var(--watch)"></i>Watch</span><span><i style="background:var(--check)"></i>Get it checked</span></div>
+      </div>
+      <div class="instr" id="regionPanel" aria-live="polite">
+        <div class="region-head"><div><p class="lbl">Selected</p><h3 id="rName"></h3></div><span id="rPill" class="pill"></span></div>
+        <div class="mult" id="rMult"></div>
+        <div class="chips" id="rChips"></div>
+        <div class="advice" id="rAdvice"></div>
+        <div class="reg-controls">
+          <div class="field"><label for="sore">Soreness today <span class="val mono" id="soreV"></span></label><input id="sore" type="range" min="0" max="10" step="1"></div>
+          <div class="field"><span class="lbl" id="histLbl">Injury history here</span>
+            <div class="seg" role="group" aria-labelledby="histLbl">
+              <button type="button" data-h="none" id="hNone">None</button><button type="button" data-h="past" id="hPast">Before</button><button type="button" data-h="recent" id="hRecent">Last 2 months</button>
+            </div></div>
+        </div>
+        <p class="lbl" style="margin-top:20px">All regions, highest first</p>
+        <ul class="ranked" id="ranked"></ul>
+      </div>
+    </div>
+    <div class="proto-actions">
+      <button type="button" id="resetSample">Reload sample athlete</button>
+      <button type="button" id="resetClean">Start from a rested, injury-free athlete</button>
+    </div>
+    <p class="disclaim">How to read the number: it is a rough multiple of risk compared with a rested athlete with no injury history, built from published findings and a few labelled design assumptions (see Evidence). Multiplying several risk factors overstates the combined effect, so anything above 10 is shown as 10+. It is a screening and awareness tool, not a diagnosis. Sharp pain, swelling, a "pop", numbness or pain at night means stop and see a doctor. This page stores nothing; everything runs in your browser.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">How the score works</p>
+      <h2>Four signals, one body map</h2>
+      <p class="lede">Each body region starts at 1.0. FlexTrack multiplies in the factors that research links to injury, then turns the result into a plain instruction. Symptoms decide whether to see someone; numbers alone never do.</p>
+    </div>
+    <div class="tscroll" id="evidence">
+      <table>
+        <thead><tr><th>Signal</th><th>What FlexTrack does</th><th>What the research says</th><th>Confidence</th></tr></thead>
+        <tbody>
+          <tr><td><b>Injury history</b><br><span class="mono" style="font-size:.8rem">×2.7 before · ×4.8 recent</span></td><td>Raises risk in the exact region that was injured.</td><td>A 2020 meta-analysis found any previous hamstring strain carried a risk ratio of 2.7, and a recent one 4.8. FlexTrack borrows these weights for every region until pilot data allows region-specific ones. <sup class="mono">[3]</sup></td><td><span class="tag strong">Strong</span></td></tr>
+          <tr><td><b>Sleep</b><br><span class="mono" style="font-size:.8rem">×1.7 under 8 h</span></td><td>Applies a body-wide multiplier when average sleep drops below 8 hours.</td><td>Adolescent athletes sleeping under 8 hours were 1.7 times as likely to have been injured. <sup class="mono">[4]</sup></td><td><span class="tag mod">Moderate</span></td></tr>
+          <tr><td><b>Training load spike</b><br><span class="mono" style="font-size:.8rem">×1.4 above 1.3</span></td><td>Compares this week's load (minutes × effort) with the usual week and flags jumps above 30%.</td><td>Session-RPE is a validated way to measure load across sports and ages. <sup class="mono">[5]</sup> Whether the acute-to-chronic ratio predicts injury is disputed, so FlexTrack shows it as a coaching flag, not a verdict. <sup class="mono">[6]</sup></td><td><span class="tag cont">Contested</span></td></tr>
+          <tr><td><b>Soreness</b><br><span class="mono" style="font-size:.8rem">×1.12 per point</span></td><td>Uses the athlete's 0 to 10 rating for each region. A 7 or higher always triggers "get it checked".</td><td>Design assumption. Soreness is a symptom, so it drives the referral rule more than the score.</td><td><span class="tag assume">Assumption</span></td></tr>
+          <tr><td><b>Sport hot spots</b><br><span class="mono" style="font-size:.8rem">×1.15 to ×1.3</span></td><td>Gives a small boost to regions that commonly get injured in each sport (ankles in basketball, shoulders in volleyball, lower back in gymnastics).</td><td>Design assumption, to be replaced by pilot data.</td><td><span class="tag assume">Assumption</span></td></tr>
+          <tr><td><b>Machine learning</b><br><span class="mono" style="font-size:.8rem">Phase 3</span></td><td>Not used yet. The current score is transparent on purpose.</td><td>Published injury-prediction models range from barely better than chance (AUC 0.52) to strong (AUC 0.87), and small datasets are the main weakness. <sup class="mono">[7]</sup> FlexTrack will train a model only once pilot data exists, and will publish how well it does.</td><td><span class="tag assume">Planned</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="patch">
+  <div class="wrap patch-grid">
+    <div class="patch-art">
+      <svg viewBox="0 0 400 300" role="img" aria-label="Exploded view of the FlexTrack patch layers">
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">
+          <g transform="translate(40,30)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--ink)" opacity=".92"/><path d="M95 14 L130 20 L165 14 L165 22 L130 28 L95 22Z" fill="var(--accent)"/></g>
+          <text x="312" y="54">cover</text>
+          <g transform="translate(40,82)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--bodyfill)" stroke="var(--bodyline)"/><rect x="104" y="12" width="26" height="12" rx="2" fill="var(--ink)" transform="skewX(-20)"/><circle cx="170" cy="22" r="4" fill="var(--accent)"/></g>
+          <text x="312" y="106">IMU + Bluetooth board</text>
+          <g transform="translate(40,134)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--bodyfill)" stroke="var(--bodyline)"/><path d="M40 20 Q90 10 140 20 T220 22" fill="none" stroke="var(--accent)" stroke-width="2.5"/></g>
+          <text x="312" y="158">sweat channel</text>
+          <g transform="translate(40,186)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--bodyfill)" stroke="var(--bodyline)"/><circle cx="90" cy="18" r="7" fill="var(--ink)"/><circle cx="160" cy="22" r="7" fill="var(--ink)"/><rect x="122" y="14" width="10" height="6" fill="var(--accent)"/></g>
+          <text x="312" y="210">EMG electrodes + temp</text>
+          <g transform="translate(40,238)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="none" stroke="var(--muted)" stroke-dasharray="4 4"/></g>
+          <text x="312" y="262">skin adhesive</text>
+          <path d="M170 60 V250" stroke="var(--muted)" stroke-dasharray="2 5"/>
+        </g>
+      </svg>
+    </div>
+    <div>
+      <div class="sec-head">
+        <p class="eyebrow">Phase 4 · Concept</p>
+        <h2>The FlexTrack patch</h2>
+        <p class="lede">The check-in relies on what athletes report. The patch adds what their muscles report. It sticks over the region the map flags (a hamstring, a calf) and measures local fatigue during the session.</p>
+      </div>
+      <div class="sensors">
+        <div class="sensor"><h4>Surface EMG: muscle fatigue</h4><span class="tag strong">Proven in wearables</span><p>As a muscle tires, the frequency of its electrical signal shifts lower. Research groups have already built EMG patches that track this in real time during exercise. <sup class="mono">[8]</sup></p></div>
+        <div class="sensor"><h4>Motion sensor (IMU): load and asymmetry</h4><span class="tag strong">Proven in wearables</span><p>Counts jumps, sprints and landings, and spots when one leg starts doing more work than the other.</p></div>
+        <div class="sensor"><h4>Sweat rate and sodium</h4><span class="tag strong">On the market</span><p>Single-use sweat patches already measure these for hydration. <sup class="mono">[9]</sup> FlexTrack would use them as context, not as an injury signal.</p></div>
+        <div class="sensor"><h4>Skin temperature</h4><span class="tag mod">Context only</span><p>Helps interpret the other signals in heat, which matters for athletes training in the Gulf.</p></div>
+        <div class="sensor"><h4>Sweat lactate</h4><span class="tag cont">Research stage</span><p>Left out for now. Sweat lactate does not yet track blood lactate reliably, and reviews call for more validation. <sup class="mono">[10]</sup></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Where FlexTrack fits</p>
+      <h2>Others track the whole body. FlexTrack tracks the part.</h2>
+      <p class="lede">Good tools already exist. Each answers a different question.</p>
+    </div>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Tool</th><th>Measures</th><th>Answers</th><th>Gap FlexTrack fills</th></tr></thead>
+        <tbody>
+          <tr><td><b>WHOOP, Oura</b></td><td>Heart rate variability, sleep, overall strain (wrist or finger)</td><td>Is my body recovered today?</td><td>Not which muscle or joint is at risk</td></tr>
+          <tr><td><b>Catapult and GPS vests</b></td><td>Distance, speed, accelerations</td><td>How much work did the team do?</td><td>Built for elite budgets; no injury history or symptoms</td></tr>
+          <tr><td><b>Gatorade Gx patch</b></td><td>Sweat rate and sodium loss</td><td>How much should I drink?</td><td>Hydration only</td></tr>
+          <tr class="us"><td><b>FlexTrack</b></td><td>Injury history, load, sleep, soreness by region; patch adds local muscle fatigue</td><td>Which part of me needs attention, and who should I see?</td><td>Region-level risk for school and club athletes</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">From pitch to prototype</p>
+      <h2>What changed when I checked the science</h2>
+      <p class="lede">The first version of FlexTrack was a competition pitch. Turning it into something real meant testing every claim against the research and changing what did not hold up.</p>
+    </div>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>In the 2025 pitch</th><th>Now</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>"Nano-sensors" measure micro-strain, hydration, lactate and blood flow</td><td>Surface EMG, motion, temperature and sweat sensors</td><td>These are proven in wearables today. Sweat lactate is still unreliable. <sup class="mono">[8][10]</sup></td></tr>
+          <tr><td>"AI-powered" from day one</td><td>Transparent score now; machine learning after the pilot</td><td>A model is only as good as its data, and small datasets are the main weakness in published injury models. <sup class="mono">[7]</sup></td></tr>
+          <tr><td>Patch first</td><td>Check-in first, patch later</td><td>The strongest predictor (past injury) needs no hardware. Athletes can use the check-in this season.</td></tr>
+          <tr><td>Headline injury figures without sources</td><td>Every number on this page is cited</td><td>Injury cost and incidence figures now come from UEFA's injury study and Howden's injury index. <sup class="mono">[1][2]</sup></td></tr>
+          <tr><td>Built around one elite club</td><td>Built for school, academy and club athletes</td><td>Elite clubs already have sports scientists. Younger athletes usually have no one watching these signals.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Roadmap</p>
+      <h2>Next steps</h2>
+    </div>
+    <div class="road">
+      <div class="step"><span class="status live">Live</span><h3>1 · Check-in prototype</h3><span class="when">October 2026</span><p>Body map and transparent risk score, running on this page.</p></div>
+      <div class="step"><span class="status rec">Recruiting</span><h3>2 · Team pilot</h3><span class="when">November 2026 to February 2027</span><p>Six-week pilots with school and club teams in Dubai across basketball, volleyball, gymnastics and dance.</p></div>
+      <div class="step"><span class="status plan">Planned</span><h3>3 · Learning model</h3><span class="when">Spring 2027</span><p>Replace assumptions with weights learned from pilot data, and publish accuracy honestly.</p></div>
+      <div class="step"><span class="status plan">Planned</span><h3>4 · Patch prototype</h3><span class="when">Summer 2027</span><p>A working EMG and motion patch built from off-the-shelf sensor boards, tested on the hamstring and calf.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="impact">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Tested with athletes</p>
+      <h2>What testers say</h2>
+      <p class="lede">FlexTrack's check-in has been trialled with student athletes in India and Egypt.</p>
+    </div>
+    <div class="quotes">
+      <figure class="quote" style="margin:0">
+        <span class="draft">Draft quote</span>
+        <p class="where">Mumbai, India</p>
+        <p class="q">Our students used FlexTrack across their training sessions and found it quick, simple and genuinely useful. It turns scattered signals into a clear picture of where an athlete needs care. I recommend it highly.</p>
+        <figcaption class="who"><b>Dr. Kamal Gupta</b><span>Chairman, Lala Lajpat Rai Institute of Management</span></figcaption>
+      </figure>
+      <figure class="quote" style="margin:0">
+        <span class="draft">Draft quote</span>
+        <p class="where">Cairo, Egypt</p>
+        <p class="q">Our athletes checked in after every session, and the body map flagged the same areas our physiotherapist was already watching. That gave our coaching staff real confidence in it.</p>
+        <figcaption class="who"><b>[Coach name]</b><span>Head Coach, [University name]</span></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="pilot">
+  <div class="wrap pilot-grid">
+    <div>
+      <div class="sec-head">
+        <p class="eyebrow">Pilot programme</p>
+        <h2>Bring FlexTrack to your team</h2>
+        <p class="lede">FlexTrack is looking for school, academy and club teams to run a free six-week pilot.</p>
+      </div>
+      <p class="lbl" style="margin-bottom:10px">Your team gets</p>
+      <ul class="list">
+        <li>Free access to the FlexTrack check-in for every athlete</li>
+        <li>A weekly body-map summary for the coach</li>
+        <li>An end-of-pilot report on load, sleep and flagged regions</li>
+      </ul>
+      <p class="lbl" style="margin:22px 0 10px">We ask for</p>
+      <ul class="list">
+        <li>A one-minute check-in from each athlete after training</li>
+        <li>The coach or physio to log any injury that causes missed sessions</li>
+      </ul>
+      <p class="lbl" style="margin:22px 0 10px">Our privacy promise</p>
+      <ul class="list">
+        <li>No athlete names in the dataset; each athlete gets a code</li>
+        <li>Athletes under 18 join only with a parent's consent and the coach's agreement</li>
+        <li>Anyone can withdraw at any time, and their data is deleted</li>
+      </ul>
+      <div class="contact"><span class="lbl">Pilot enquiries</span><span class="mono" id="cEmail">lailazaghloul8@gmail.com</span><button type="button" id="cCopy">Copy email</button><span class="note" id="cMsg" style="font-size:.82rem;color:var(--muted)"></span></div>
+      <p class="lbl" style="margin:28px 0 0">Impact log</p>
+      <div class="log">
+        <div><span class="mono">2025</span><span>FlexTrack concept designed with my Hult Future Leaders Challenge team, Visionarios Barça; the team reached the semi-final round.</span></div>
+        <div><span class="mono">October 2026</span><span>Check-in prototype v1 published on this site; every claim checked against published research.</span></div>
+        <div><span class="mono">October 2026</span><span>Trialled with students at the Lala Lajpat Rai Institute of Management, Mumbai.</span></div>
+        <div><span class="mono">October 2026</span><span>Trialled by the coaching team at [University name], Cairo.</span></div>
+      </div>
+    </div>
+    <form class="form" id="pilotForm" novalidate>
+      <h3>Request a pilot</h3>
+      <div class="row">
+        <div class="field"><label for="pName">Your name</label><input id="pName" type="text" required autocomplete="name"></div>
+        <div class="field"><label for="pRole">Role</label><select id="pRole"><option>Coach</option><option>Physiotherapist</option><option>PE teacher</option><option>Athletic director</option><option>Athlete</option><option>Parent</option></select></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="pTeam">School or club</label><input id="pTeam" type="text" required></div>
+        <div class="field"><label for="pSport">Sport</label><input id="pSport" type="text" required></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="pSize">Number of athletes</label><input id="pSize" type="number" min="1" max="200"></div>
+        <div class="field"><label for="pAge">Age group</label><select id="pAge"><option>Under 14</option><option>14 to 17</option><option>18 and over</option><option>Mixed</option></select></div>
+      </div>
+      <div class="field"><label for="pEmail">Your email</label><input id="pEmail" type="email" required autocomplete="email"></div>
+      <button class="btn" type="submit" style="justify-self:start">Prepare my request</button>
+      <p class="note" id="pErr" role="alert"></p>
+      <div id="pOutWrap" hidden>
+        <div class="field"><label for="pOut">Your pilot request</label><textarea id="pOut" readonly></textarea></div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px">
+          <button class="btn ghost" type="button" id="pCopy">Copy request</button><span class="note" id="pCopyMsg"></span>
+        </div>
+        <p class="note" id="pSend" style="margin-top:10px"></p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id="founder">
+  <div class="wrap founder">
+    <div class="sec-head" style="margin:0">
+      <p class="eyebrow">Founder</p>
+      <h2>Laila Zaghloul</h2>
+      <p class="lede">IB Diploma student in Dubai, planning to study biology on a pre-med track.</p>
+    </div>
+    <div style="display:grid;gap:26px">
+      <blockquote>I have danced for twelve years and done gymnastics for ten, and I play basketball and volleyball. I want to become a doctor because I like helping people. FlexTrack is where those two parts of my life meet: an athlete's body gives warning signs, and medicine is about learning to read them early.</blockquote>
+      <div class="cv">
+        <div><span>Sport</span><span>Dance (12 years) and gymnastics (10 years), with international competitions; basketball (school junior varsity and MPAC); Elite Volleyball</span></div>
+        <div><span>Medicine</span><span>Four clinical internships, 2024 to 2026: two at a dental clinic, two at a zoology clinic; pre-med club member for two years</span></div>
+        <div><span>Enterprise</span><span>Hult Future Leaders Challenge 2025, semi-finalist with team Visionarios Barça</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head"><p class="eyebrow">Sources</p></div>
+    <ol class="sources">
+      <li>Ekstrand J et al. Hamstring injury rates have increased during recent seasons: the UEFA Elite Club Injury Study 2001/02 to 2021/22. <i>BJSM</i>, 2022. <a href="https://blogs.bmj.com/bjsm/?p=10378" target="_blank" rel="noopener">Summary</a></li>
+      <li>Howden. Men's European Football Injury Index 2023/24 and 2024/25. <a href="https://howdengroupholdings.com/news/howdens-2023-24-mens-european-football-injury-index-reveals-record-injury-rates-across-europes-top-mens-leagues" target="_blank" rel="noopener">2023/24</a> · <a href="https://www.howdengroupholdings.com/reports/mens-european-football-injury-index-202425" target="_blank" rel="noopener">2024/25</a></li>
+      <li>Green B et al. Recalibrating the risk of hamstring strain injury: a 2020 systematic review and meta-analysis. <i>BJSM</i> 54(18), 2020. <a href="https://pubmed.ncbi.nlm.nih.gov/32299793/" target="_blank" rel="noopener">PubMed</a></li>
+      <li>Milewski MD et al. Chronic lack of sleep is associated with increased sports injuries in adolescent athletes. <i>J Pediatr Orthop</i>, 2014. <a href="https://www.naseinc.com/blog/less-sleep-increases-injury-potential-in-adolescent-athletes/" target="_blank" rel="noopener">Summary</a></li>
+      <li>Haddad M et al. Session-RPE method for training load monitoring: validity, ecological usefulness, and influencing factors. <i>Front Neurosci</i>, 2017. <a href="https://www.frontiersin.org/articles/10.3389/fnins.2017.00612/text" target="_blank" rel="noopener">Article</a></li>
+      <li>Impellizzeri FM et al. Training load and its role in injury prevention: methodological issues. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7534938/" target="_blank" rel="noopener">PMC</a></li>
+      <li>Van Eetvelde H et al. Machine learning methods in sport injury prediction and prevention: a systematic review. <i>J Exp Orthop</i>, 2021. <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8046881/" target="_blank" rel="noopener">PMC</a>; Leckey C et al. Machine learning approaches to injury risk prediction in sport: a scoping review. <i>BJSM</i>, 2025. <a href="https://bjsm.bmj.com/content/59/7/491" target="_blank" rel="noopener">Article</a></li>
+      <li>Liu SH et al. An EMG patch for the real-time monitoring of muscle-fatigue conditions during exercise. <i>Sensors</i>, 2019. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6679275" target="_blank" rel="noopener">PMC</a></li>
+      <li>IEEE Spectrum. How your smartphone can see you sweat (Gx Sweat Patch). <a href="https://spectrum.ieee.org/how-your-smart-phone-can-see-you-sweat" target="_blank" rel="noopener">Article</a></li>
+      <li>Yang G et al. Wearable device for continuous sweat lactate monitoring in sports: a narrative review. <i>Front Physiol</i>, 2024. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11025537/" target="_blank" rel="noopener">PMC</a></li>
+      <li>Hult International Business School. Hult Future Leaders Challenge 2025, with Barça Innovation Hub. <a href="https://www.hult.edu/hflc" target="_blank" rel="noopener">hult.edu</a></li>
+    </ol>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><b style="color:var(--ink)">FlexTrack</b> is an independent student project by Laila Zaghloul. It began as a response to a Barça Innovation Hub brief in the Hult Future Leaders Challenge 2025 and is not affiliated with or endorsed by FC Barcelona, Barça Innovation Hub or Hult International Business School.</p>
+    <p>FlexTrack is not a medical device and does not diagnose or treat any condition. If you are injured or in pain, see a qualified clinician.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Contact inbox for pilot requests. Leave empty until a project inbox exists.
+  var CONTACT_EMAIL = "lailazaghloul8@gmail.com";
+
+  var ORDER = ["shoulder","lowback","hip","quad","hamstring","knee","calf","ankle"];
+  var R = {
+    shoulder:{name:"Shoulder", spec:"a physiotherapist", tip:"Add rotator cuff and shoulder-blade strengthening, and build serving or throwing volume gradually."},
+    lowback:{name:"Lower back", spec:"a physiotherapist", tip:"Add core endurance work and check technique on repeated back-bending moves such as walkovers and spikes."},
+    hip:{name:"Hip and groin", spec:"a physiotherapist", tip:"Add adductor strengthening such as Copenhagen planks, and avoid sudden jumps in kicking or change-of-direction work."},
+    quad:{name:"Front thigh", spec:"a physiotherapist", tip:"Build sprinting and kicking volume gradually and keep a full warm-up before fast work."},
+    hamstring:{name:"Back thigh (hamstring)", spec:"a physiotherapist", tip:"Prioritise eccentric hamstring work such as Nordic curls, and avoid maximum-speed sprints until it settles."},
+    knee:{name:"Knee", spec:"a sports medicine doctor or physiotherapist", tip:"Use a structured warm-up with landing drills (for example FIFA 11+) and watch the number of jumps per session."},
+    calf:{name:"Calf and Achilles", spec:"a physiotherapist", tip:"Add calf raises for capacity and ease back into hard running or jumping on hard surfaces."},
+    ankle:{name:"Ankle and foot", spec:"a sports medicine doctor or physiotherapist", tip:"Add balance and ankle-stability drills; if you have sprained it before, ask about taping or a brace."}
+  };
+  var EXPO = {
+    basketball:{ankle:1.3,knee:1.2},
+    volleyball:{shoulder:1.3,knee:1.2,ankle:1.2},
+    football:{hamstring:1.3,hip:1.2,ankle:1.15,knee:1.15},
+    gymnastics:{lowback:1.3,ankle:1.2,shoulder:1.2},
+    dance:{ankle:1.3,hip:1.2,lowback:1.15}
+  };
+  var HIST = {none:1, past:2.7, recent:4.8};
+  var HIST_LABEL = {none:"No previous injury", past:"Injured here before", recent:"Injured in the last 2 months"};
+
+  function sample(){ return {sport:"basketball", weekMin:540, weekRpe:7, usualMin:420, usualRpe:6, sleep:6.5, selected:"hamstring",
+    regions:{shoulder:{s:0,h:"none"},lowback:{s:2,h:"none"},hip:{s:0,h:"none"},quad:{s:0,h:"none"},hamstring:{s:5,h:"recent"},knee:{s:0,h:"none"},calf:{s:4,h:"none"},ankle:{s:0,h:"past"}}}; }
+  function clean(){ var s=sample(); s.weekMin=420; s.weekRpe=6; s.sleep=8.5; ORDER.forEach(function(k){s.regions[k]={s:0,h:"none"};}); return s; }
+  var S = sample();
+
+  var $ = function(id){return document.getElementById(id);};
+  function fmt(n){return n>=10?'10+':(Math.round(n*10)/10).toFixed(1);}
+
+  function globals(){
+    var acute=S.weekMin*S.weekRpe, chronic=S.usualMin*S.usualRpe;
+    var ratio = chronic>0 ? acute/chronic : null;
+    return {acute:acute, chronic:chronic, ratio:ratio, load:(ratio!==null && ratio>1.3)?1.4:1, sleep:S.sleep<8?1.7:1};
+  }
+  function score(k,g){
+    var r=S.regions[k], ex=(EXPO[S.sport]||{})[k]||1, hm=HIST[r.h], sm=1+0.12*r.s;
+    var regional=ex*hm*sm, total=regional*g.load*g.sleep, level;
+    if (r.s>=7 || (total>=5 && (r.s>=4 || r.h==="recent"))) level="check";
+    else if (total>=3.5 || regional>=1.5) level="watch";
+    else level="clear";
+    return {ex:ex,hm:hm,sm:sm,regional:regional,total:total,level:level};
+  }
+  var COLOR={clear:"var(--clear)",watch:"var(--watch)",check:"var(--check)"};
+  var OPAC={clear:.38,watch:.9,check:.95};
+  var LEVEL_TXT={clear:"Clear",watch:"Watch",check:"Get it checked"};
+
+  // body figures
+  function fig(dx, side){
+    var n='', reg='';
+    function sh(tag,attrs,rid){
+      var a=''; for (var k in attrs) a+=' '+k+'="'+attrs[k]+'"';
+      if (rid) return '<'+tag+a+' class="rg" data-r="'+rid+'"/>';
+      return '<'+tag+a+' fill="var(--bodyfill)" stroke="var(--bodyline)" stroke-width="1"/>';
+    }
+    var X=function(v){return v+dx;};
+    n+=sh('circle',{cx:X(100),cy:34,r:20});
+    n+=sh('rect',{x:X(92),y:52,width:16,height:14,rx:4});
+    n+=sh('rect',{x:X(42),y:76,width:20,height:128,rx:10});
+    n+=sh('rect',{x:X(138),y:76,width:20,height:128,rx:10});
+    n+=sh('circle',{cx:X(52),cy:214,r:9}); n+=sh('circle',{cx:X(148),cy:214,r:9});
+    n+=sh('rect',{x:X(66),y:64,width:68,height:118,rx:22});
+    if (side==='back'){
+      n+=sh('rect',{x:X(70),y:170,width:60,height:40,rx:14});
+      n+=sh('ellipse',{cx:X(85),cy:304,rx:14,ry:12}); n+=sh('ellipse',{cx:X(115),cy:304,rx:14,ry:12});
+    } else {
+      n+=sh('rect',{x:X(74),y:312,width:22,height:74,rx:10}); n+=sh('rect',{x:X(104),y:312,width:22,height:74,rx:10});
+    }
+    reg+=sh('ellipse',{cx:X(68),cy:82,rx:17,ry:13},'shoulder'); reg+=sh('ellipse',{cx:X(132),cy:82,rx:17,ry:13},'shoulder');
+    if (side==='front'){
+      reg+=sh('rect',{x:X(70),y:170,width:60,height:40,rx:14},'hip');
+      reg+=sh('rect',{x:X(72),y:204,width:26,height:92,rx:12},'quad'); reg+=sh('rect',{x:X(102),y:204,width:26,height:92,rx:12},'quad');
+      reg+=sh('ellipse',{cx:X(85),cy:304,rx:14,ry:12},'knee'); reg+=sh('ellipse',{cx:X(115),cy:304,rx:14,ry:12},'knee');
+    } else {
+      reg+=sh('rect',{x:X(76),y:136,width:48,height:34,rx:10},'lowback');
+      reg+=sh('rect',{x:X(72),y:204,width:26,height:92,rx:12},'hamstring'); reg+=sh('rect',{x:X(102),y:204,width:26,height:92,rx:12},'hamstring');
+      reg+=sh('rect',{x:X(74),y:312,width:22,height:74,rx:10},'calf'); reg+=sh('rect',{x:X(104),y:312,width:22,height:74,rx:10},'calf');
+    }
+    reg+=sh('ellipse',{cx:X(85),cy:396,rx:15,ry:9},'ankle'); reg+=sh('ellipse',{cx:X(115),cy:396,rx:15,ry:9},'ankle');
+    var label='<text x="'+X(100)+'" y="424" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" letter-spacing="1.5" fill="var(--muted)">'+side.toUpperCase()+'</text>';
+    return n+reg+label;
+  }
+  var svg=$("bodySvg");
+  svg.innerHTML = fig(0,'front') + fig(220,'back');
+  // one focusable target per region (first shape), aria on all
+  var seen={};
+  Array.prototype.forEach.call(svg.querySelectorAll('.rg'), function(el){
+    var k=el.getAttribute('data-r');
+    el.setAttribute('aria-label', R[k].name);
+    if(!seen[k]){ el.setAttribute('tabindex','0'); el.setAttribute('role','button'); seen[k]=1; }
+    el.addEventListener('click', function(){ S.selected=k; render(); });
+    el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); S.selected=k; render(); } });
+  });
+
+  function syncInputs(){
+    $("sport").value=S.sport; $("weekMin").value=S.weekMin; $("weekRpe").value=S.weekRpe;
+    $("usualMin").value=S.usualMin; $("usualRpe").value=S.usualRpe; $("sleep").value=S.sleep;
+  }
+
+  function render(){
+    var g=globals();
+    $("weekRpeV").textContent=S.weekRpe+"/10"; $("usualRpeV").textContent=S.usualRpe+"/10"; $("sleepV").textContent=S.sleep+" h";
+    var ls = '<span>This week <b class="mono">'+g.acute.toLocaleString("en-GB")+' AU</b></span><span>Usual week <b class="mono">'+g.chronic.toLocaleString("en-GB")+' AU</b></span>';
+    if (g.ratio!==null){ ls+='<span>Change <b class="mono">'+(g.ratio>=1?'+':'')+Math.round((g.ratio-1)*100)+'%</b></span>'; }
+    ls+= g.load>1 ? '<span style="color:var(--watch);font-weight:600">Load spike flag</span>' : '<span style="color:var(--clear);font-weight:600">Load steady</span>';
+    ls+= g.sleep>1 ? '<span style="color:var(--watch);font-weight:600">Short sleep flag</span>' : '<span style="color:var(--clear);font-weight:600">Sleep OK</span>';
+    $("loadStrip").innerHTML=ls;
+
+    var res={}; ORDER.forEach(function(k){res[k]=score(k,g);});
+    Array.prototype.forEach.call(svg.querySelectorAll('.rg'), function(el){
+      var k=el.getAttribute('data-r'), r=res[k];
+      el.setAttribute('fill', COLOR[r.level]); el.setAttribute('fill-opacity', OPAC[r.level]);
+      el.classList.toggle('sel', k===S.selected);
+      el.setAttribute('aria-pressed', k===S.selected?'true':'false');
+    });
+
+    var k=S.selected, r=res[k], reg=S.regions[k];
+    $("rName").textContent=R[k].name;
+    var pill=$("rPill"); pill.className='pill '+r.level; pill.textContent=LEVEL_TXT[r.level];
+    $("rMult").innerHTML='×'+fmt(r.total)+'<small>vs a rested, injury-free athlete</small>';
+    var chips=[];
+    if (r.hm>1) chips.push(HIST_LABEL[reg.h]+' ×'+r.hm);
+    if (reg.s>0) chips.push('Soreness '+reg.s+'/10 ×'+r.sm.toFixed(2));
+    if (r.ex>1) chips.push('Sport hot spot ×'+r.ex);
+    if (g.load>1) chips.push('Load spike ×'+g.load);
+    if (g.sleep>1) chips.push('Sleep '+S.sleep+' h ×'+g.sleep);
+    if (!chips.length) chips.push('No risk factors');
+    $("rChips").innerHTML=chips.map(function(c){return '<span class="chip">'+c+'</span>';}).join('');
+    var adv;
+    if (r.level==='check') adv='<p><b>Get it checked.</b> Book '+R[k].spec+' before your next hard session and show them this check-in.</p><p>'+R[k].tip+'</p><p style="color:var(--muted);font-size:.86rem">Sharp pain, swelling, a pop, numbness or pain at night: stop and see a doctor promptly.</p>';
+    else if (r.level==='watch') adv='<p><b>Watch this area.</b> '+R[k].tip+'</p><p style="color:var(--muted);font-size:.86rem">If soreness rises or lasts more than a few days, see '+R[k].spec+'.</p>';
+    else adv='<p><b>No flags here.</b> Keep your usual warm-up and check in again after your next session.</p>';
+    if (g.sleep>1 && r.level!=='clear') adv+='<p style="color:var(--muted);font-size:.86rem">Body-wide: more sleep is the cheapest fix on this page.</p>';
+    $("rAdvice").innerHTML=adv;
+    $("sore").value=reg.s; $("soreV").textContent=reg.s+"/10";
+    ["hNone","hPast","hRecent"].forEach(function(id){ var b=$(id); b.setAttribute('aria-pressed', b.getAttribute('data-h')===reg.h?'true':'false'); });
+
+    var ranked=ORDER.slice().sort(function(a,b){return res[b].total-res[a].total;});
+    $("ranked").innerHTML=ranked.map(function(id){
+      var x=res[id], w=Math.min(100, x.total/10*100);
+      return '<li><button type="button" data-r="'+id+'" class="'+(id===S.selected?'sel':'')+'"><span>'+R[id].name+'</span><span class="bar"><i style="width:'+w+'%;background:'+COLOR[x.level]+';opacity:'+(x.level==='clear'?.55:1)+'"></i></span><span class="mono">×'+fmt(x.total)+'</span></button></li>';
+    }).join('');
+  }
+
+  $("ranked").addEventListener('click', function(e){ var b=e.target.closest('button'); if(b){ S.selected=b.getAttribute('data-r'); render(); }});
+  function num(id,min,max){ var v=parseFloat($(id).value); if(isNaN(v)) v=0; return Math.max(min,Math.min(max,v)); }
+  $("sport").addEventListener('change', function(){S.sport=this.value; render();});
+  ["weekMin","usualMin"].forEach(function(id){ $(id).addEventListener('input', function(){ S[id]=num(id,0,2000); render(); }); });
+  ["weekRpe","usualRpe","sleep"].forEach(function(id){ $(id).addEventListener('input', function(){ S[id]=parseFloat(this.value); render(); }); });
+  $("sore").addEventListener('input', function(){ S.regions[S.selected].s=parseInt(this.value,10); render(); });
+  ["hNone","hPast","hRecent"].forEach(function(id){ $(id).addEventListener('click', function(){ S.regions[S.selected].h=this.getAttribute('data-h'); render(); }); });
+  $("resetSample").addEventListener('click', function(){ S=sample(); syncInputs(); render(); });
+  $("resetClean").addEventListener('click', function(){ S=clean(); syncInputs(); render(); });
+
+  syncInputs(); render();
+
+  // pilot form
+  $("pilotForm").addEventListener('submit', function(e){
+    e.preventDefault();
+    var name=$("pName").value.trim(), team=$("pTeam").value.trim(), sport=$("pSport").value.trim(), email=$("pEmail").value.trim();
+    if(!name||!team||!sport||!/^\S+@\S+\.\S+$/.test(email)){ $("pErr").textContent="Please add your name, school or club, sport and a valid email."; return; }
+    $("pErr").textContent="";
+    var txt="FlexTrack pilot request\n\nName: "+name+"\nRole: "+$("pRole").value+"\nSchool or club: "+team+"\nSport: "+sport+
+      "\nNumber of athletes: "+($("pSize").value||"not given")+"\nAge group: "+$("pAge").value+"\nEmail: "+email+
+      "\n\nWe would like to run a six-week FlexTrack pilot with our team.";
+    $("pOut").value=txt; $("pOutWrap").hidden=false;
+    $("pSend").textContent = CONTACT_EMAIL ? ("Send it to "+CONTACT_EMAIL+".") : "Copy this request and send it to the FlexTrack team. A direct pilot inbox is being set up.";
+  });
+  $("cCopy").addEventListener('click', function(){
+    var v=$("cEmail").textContent;
+    try{ navigator.clipboard.writeText(v).then(function(){$("cMsg").textContent="Copied";}, function(){$("cMsg").textContent="Select the address to copy it.";}); }
+    catch(err){ $("cMsg").textContent="Select the address to copy it."; }
+  });
+  $("pCopy").addEventListener('click', function(){
+    var t=$("pOut"); var done=function(){ $("pCopyMsg").textContent="Copied"; };
+    try{ navigator.clipboard.writeText(t.value).then(done, function(){ t.focus(); t.select(); $("pCopyMsg").textContent="Selected. Press Ctrl+C or Cmd+C to copy."; }); }
+    catch(err){ t.focus(); t.select(); $("pCopyMsg").textContent="Selected. Press Ctrl+C or Cmd+C to copy."; }
+  });
+})();
+</script>
+
+</body>
+</html>

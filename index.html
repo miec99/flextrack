@@ -4,10 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>FlexTrack</title>
+<link rel="canonical" href="https://getflextrack.com/">
 <meta property="og:title" content="FlexTrack">
 <meta property="og:description" content="Find the weak spot before it finds you. A student-led sports medicine project mapping where injury risk builds on an athlete's body.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://getflextrack.com/">
+<meta property="og:image" content="https://getflextrack.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0F1B2D">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 22'%3E%3Cpath d='M2 2 L15 12 L28 2 L28 9 L15 20 L2 9Z' fill='%23E2621B'/%3E%3C/svg%3E">
 <meta name="description" content="FlexTrack maps where on an athlete's body injury risk is building. A student-led sports medicine project by Laila Zaghloul.">
@@ -222,6 +227,16 @@ footer .wrap{display:grid;gap:10px}
   .ranked button{grid-template-columns:minmax(0,8em) 1fr auto}
   .nav ul{gap:12px}
 }
+@media (max-width:640px){
+  table{min-width:0}
+  thead{display:none}
+  tr{display:block;padding:14px 16px;border-bottom:1px solid var(--line)}
+  tr:last-child{border-bottom:0}
+  td{display:block;border:0;padding:3px 0}
+  td[data-label]::before{content:attr(data-label);display:block;font-family:var(--f-mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+  td:first-child::before{display:none}
+  td:first-child{font-size:1.02rem}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -350,12 +365,12 @@ footer .wrap{display:grid;gap:10px}
       <table>
         <thead><tr><th>Signal</th><th>What FlexTrack does</th><th>What the research says</th><th>Confidence</th></tr></thead>
         <tbody>
-          <tr><td><b>Injury history</b><br><span class="mono" style="font-size:.8rem">×2.7 before · ×4.8 recent</span></td><td>Raises risk in the exact region that was injured.</td><td>A 2020 meta-analysis found any previous hamstring strain carried a risk ratio of 2.7, and a recent one 4.8. FlexTrack borrows these weights for every region until pilot data allows region-specific ones. <sup class="mono">[3]</sup></td><td><span class="tag strong">Strong</span></td></tr>
-          <tr><td><b>Sleep</b><br><span class="mono" style="font-size:.8rem">×1.7 under 8 h</span></td><td>Applies a body-wide multiplier when average sleep drops below 8 hours.</td><td>Adolescent athletes sleeping under 8 hours were 1.7 times as likely to have been injured. <sup class="mono">[4]</sup></td><td><span class="tag mod">Moderate</span></td></tr>
-          <tr><td><b>Training load spike</b><br><span class="mono" style="font-size:.8rem">×1.4 above 1.3</span></td><td>Compares this week's load (minutes × effort) with the usual week and flags jumps above 30%.</td><td>Session-RPE is a validated way to measure load across sports and ages. <sup class="mono">[5]</sup> Whether the acute-to-chronic ratio predicts injury is disputed, so FlexTrack shows it as a coaching flag, not a verdict. <sup class="mono">[6]</sup></td><td><span class="tag cont">Contested</span></td></tr>
-          <tr><td><b>Soreness</b><br><span class="mono" style="font-size:.8rem">×1.12 per point</span></td><td>Uses the athlete's 0 to 10 rating for each region. A 7 or higher always triggers "get it checked".</td><td>Design assumption. Soreness is a symptom, so it drives the referral rule more than the score.</td><td><span class="tag assume">Assumption</span></td></tr>
-          <tr><td><b>Sport hot spots</b><br><span class="mono" style="font-size:.8rem">×1.15 to ×1.3</span></td><td>Gives a small boost to regions that commonly get injured in each sport (ankles in basketball, shoulders in volleyball, lower back in gymnastics).</td><td>Design assumption, to be replaced by pilot data.</td><td><span class="tag assume">Assumption</span></td></tr>
-          <tr><td><b>Machine learning</b><br><span class="mono" style="font-size:.8rem">Phase 3</span></td><td>Not used yet. The current score is transparent on purpose.</td><td>Published injury-prediction models range from barely better than chance (AUC 0.52) to strong (AUC 0.87), and small datasets are the main weakness. <sup class="mono">[7]</sup> FlexTrack will train a model only once pilot data exists, and will publish how well it does.</td><td><span class="tag assume">Planned</span></td></tr>
+          <tr><td data-label="Signal"><b>Injury history</b><br><span class="mono" style="font-size:.8rem">×2.7 before · ×4.8 recent</span></td><td data-label="What FlexTrack does">Raises risk in the exact region that was injured.</td><td data-label="What the research says">A 2020 meta-analysis found any previous hamstring strain carried a risk ratio of 2.7, and a recent one 4.8. FlexTrack borrows these weights for every region until pilot data allows region-specific ones. <sup class="mono">[3]</sup></td><td data-label="Confidence"><span class="tag strong">Strong</span></td></tr>
+          <tr><td data-label="Signal"><b>Sleep</b><br><span class="mono" style="font-size:.8rem">×1.7 under 8 h</span></td><td data-label="What FlexTrack does">Applies a body-wide multiplier when average sleep drops below 8 hours.</td><td data-label="What the research says">Adolescent athletes sleeping under 8 hours were 1.7 times as likely to have been injured. <sup class="mono">[4]</sup></td><td data-label="Confidence"><span class="tag mod">Moderate</span></td></tr>
+          <tr><td data-label="Signal"><b>Training load spike</b><br><span class="mono" style="font-size:.8rem">×1.4 above 1.3</span></td><td data-label="What FlexTrack does">Compares this week's load (minutes × effort) with the usual week and flags jumps above 30%.</td><td data-label="What the research says">Session-RPE is a validated way to measure load across sports and ages. <sup class="mono">[5]</sup> Whether the acute-to-chronic ratio predicts injury is disputed, so FlexTrack shows it as a coaching flag, not a verdict. <sup class="mono">[6]</sup></td><td data-label="Confidence"><span class="tag cont">Contested</span></td></tr>
+          <tr><td data-label="Signal"><b>Soreness</b><br><span class="mono" style="font-size:.8rem">×1.12 per point</span></td><td data-label="What FlexTrack does">Uses the athlete's 0 to 10 rating for each region. A 7 or higher always triggers "get it checked".</td><td data-label="What the research says">Design assumption. Soreness is a symptom, so it drives the referral rule more than the score.</td><td data-label="Confidence"><span class="tag assume">Assumption</span></td></tr>
+          <tr><td data-label="Signal"><b>Sport hot spots</b><br><span class="mono" style="font-size:.8rem">×1.15 to ×1.3</span></td><td data-label="What FlexTrack does">Gives a small boost to regions that commonly get injured in each sport (ankles in basketball, shoulders in volleyball, lower back in gymnastics).</td><td data-label="What the research says">Design assumption, to be replaced by pilot data.</td><td data-label="Confidence"><span class="tag assume">Assumption</span></td></tr>
+          <tr><td data-label="Signal"><b>Machine learning</b><br><span class="mono" style="font-size:.8rem">Phase 3</span></td><td data-label="What FlexTrack does">Not used yet. The current score is transparent on purpose.</td><td data-label="What the research says">Published injury-prediction models range from barely better than chance (AUC 0.52) to strong (AUC 0.87), and small datasets are the main weakness. <sup class="mono">[7]</sup> FlexTrack will train a model only once pilot data exists, and will publish how well it does.</td><td data-label="Confidence"><span class="tag assume">Planned</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -365,16 +380,16 @@ footer .wrap{display:grid;gap:10px}
 <section id="patch">
   <div class="wrap patch-grid">
     <div class="patch-art">
-      <svg viewBox="0 0 400 300" role="img" aria-label="Exploded view of the FlexTrack patch layers">
-        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted)">
+      <svg viewBox="0 0 470 300" role="img" aria-label="Exploded view of the FlexTrack patch layers">
+        <g font-family="IBM Plex Mono, monospace" font-size="14" fill="var(--muted)">
           <g transform="translate(40,30)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--ink)" opacity=".92"/><path d="M95 14 L130 20 L165 14 L165 22 L130 28 L95 22Z" fill="var(--accent)"/></g>
           <text x="312" y="54">cover</text>
           <g transform="translate(40,82)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--bodyfill)" stroke="var(--bodyline)"/><rect x="104" y="12" width="26" height="12" rx="2" fill="var(--ink)" transform="skewX(-20)"/><circle cx="170" cy="22" r="4" fill="var(--accent)"/></g>
-          <text x="312" y="106">IMU + Bluetooth board</text>
+          <text x="312" y="106">IMU + Bluetooth</text>
           <g transform="translate(40,134)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--bodyfill)" stroke="var(--bodyline)"/><path d="M40 20 Q90 10 140 20 T220 22" fill="none" stroke="var(--accent)" stroke-width="2.5"/></g>
           <text x="312" y="158">sweat channel</text>
           <g transform="translate(40,186)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="var(--bodyfill)" stroke="var(--bodyline)"/><circle cx="90" cy="18" r="7" fill="var(--ink)"/><circle cx="160" cy="22" r="7" fill="var(--ink)"/><rect x="122" y="14" width="10" height="6" fill="var(--accent)"/></g>
-          <text x="312" y="210">EMG electrodes + temp</text>
+          <text x="312" y="210">EMG + temperature</text>
           <g transform="translate(40,238)"><path d="M0 18 L110 0 L260 20 L150 40Z" fill="none" stroke="var(--muted)" stroke-dasharray="4 4"/></g>
           <text x="312" y="262">skin adhesive</text>
           <path d="M170 60 V250" stroke="var(--muted)" stroke-dasharray="2 5"/>
@@ -409,10 +424,10 @@ footer .wrap{display:grid;gap:10px}
       <table>
         <thead><tr><th>Tool</th><th>Measures</th><th>Answers</th><th>Gap FlexTrack fills</th></tr></thead>
         <tbody>
-          <tr><td><b>WHOOP, Oura</b></td><td>Heart rate variability, sleep, overall strain (wrist or finger)</td><td>Is my body recovered today?</td><td>Not which muscle or joint is at risk</td></tr>
-          <tr><td><b>Catapult and GPS vests</b></td><td>Distance, speed, accelerations</td><td>How much work did the team do?</td><td>Built for elite budgets; no injury history or symptoms</td></tr>
-          <tr><td><b>Gatorade Gx patch</b></td><td>Sweat rate and sodium loss</td><td>How much should I drink?</td><td>Hydration only</td></tr>
-          <tr class="us"><td><b>FlexTrack</b></td><td>Injury history, load, sleep, soreness by region; patch adds local muscle fatigue</td><td>Which part of me needs attention, and who should I see?</td><td>Region-level risk for school and club athletes</td></tr>
+          <tr><td data-label="Tool"><b>WHOOP, Oura</b></td><td data-label="Measures">Heart rate variability, sleep, overall strain (wrist or finger)</td><td data-label="Answers">Is my body recovered today?</td><td data-label="Gap FlexTrack fills">Not which muscle or joint is at risk</td></tr>
+          <tr><td data-label="Tool"><b>Catapult and GPS vests</b></td><td data-label="Measures">Distance, speed, accelerations</td><td data-label="Answers">How much work did the team do?</td><td data-label="Gap FlexTrack fills">Built for elite budgets; no injury history or symptoms</td></tr>
+          <tr><td data-label="Tool"><b>Gatorade Gx patch</b></td><td data-label="Measures">Sweat rate and sodium loss</td><td data-label="Answers">How much should I drink?</td><td data-label="Gap FlexTrack fills">Hydration only</td></tr>
+          <tr class="us"><td data-label="Tool"><b>FlexTrack</b></td><td data-label="Measures">Injury history, load, sleep, soreness by region; patch adds local muscle fatigue</td><td data-label="Answers">Which part of me needs attention, and who should I see?</td><td data-label="Gap FlexTrack fills">Region-level risk for school and club athletes</td></tr>
         </tbody>
       </table>
     </div>
@@ -430,11 +445,11 @@ footer .wrap{display:grid;gap:10px}
       <table>
         <thead><tr><th>In the 2025 pitch</th><th>Now</th><th>Why</th></tr></thead>
         <tbody>
-          <tr><td>"Nano-sensors" measure micro-strain, hydration, lactate and blood flow</td><td>Surface EMG, motion, temperature and sweat sensors</td><td>These are proven in wearables today. Sweat lactate is still unreliable. <sup class="mono">[8][10]</sup></td></tr>
-          <tr><td>"AI-powered" from day one</td><td>Transparent score now; machine learning after the pilot</td><td>A model is only as good as its data, and small datasets are the main weakness in published injury models. <sup class="mono">[7]</sup></td></tr>
-          <tr><td>Patch first</td><td>Check-in first, patch later</td><td>The strongest predictor (past injury) needs no hardware. Athletes can use the check-in this season.</td></tr>
-          <tr><td>Headline injury figures without sources</td><td>Every number on this page is cited</td><td>Injury cost and incidence figures now come from UEFA's injury study and Howden's injury index. <sup class="mono">[1][2]</sup></td></tr>
-          <tr><td>Built around one elite club</td><td>Built for school, academy and club athletes</td><td>Elite clubs already have sports scientists. Younger athletes usually have no one watching these signals.</td></tr>
+          <tr><td data-label="In the 2025 pitch">"Nano-sensors" measure micro-strain, hydration, lactate and blood flow</td><td data-label="Now">Surface EMG, motion, temperature and sweat sensors</td><td data-label="Why">These are proven in wearables today. Sweat lactate is still unreliable. <sup class="mono">[8][10]</sup></td></tr>
+          <tr><td data-label="In the 2025 pitch">"AI-powered" from day one</td><td data-label="Now">Transparent score now; machine learning after the pilot</td><td data-label="Why">A model is only as good as its data, and small datasets are the main weakness in published injury models. <sup class="mono">[7]</sup></td></tr>
+          <tr><td data-label="In the 2025 pitch">Patch first</td><td data-label="Now">Check-in first, patch later</td><td data-label="Why">The strongest predictor (past injury) needs no hardware. Athletes can use the check-in this season.</td></tr>
+          <tr><td data-label="In the 2025 pitch">Headline injury figures without sources</td><td data-label="Now">Every number on this page is cited</td><td data-label="Why">Injury cost and incidence figures now come from UEFA's injury study and Howden's injury index. <sup class="mono">[1][2]</sup></td></tr>
+          <tr><td data-label="In the 2025 pitch">Built around one elite club</td><td data-label="Now">Built for school, academy and club athletes</td><td data-label="Why">Elite clubs already have sports scientists. Younger athletes usually have no one watching these signals.</td></tr>
         </tbody>
       </table>
     </div>
